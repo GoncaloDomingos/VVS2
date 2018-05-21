@@ -235,53 +235,7 @@ public class TestIndex {
 //	}
 //	
 	
-	@Test
-	public void insertNewAddress() throws IOException {
-		// get a specific link
-		HtmlAnchor addAddressLink = page.getAnchorByHref("addAddressToCustomer.html");
-		// click on it
-		HtmlPage nextPage = (HtmlPage) addAddressLink.openLinkInNewWindow();
-		// check if title is the one expected
-		assertEquals("Enter Address", nextPage.getTitleText());
 
-		// get the page first form:
-		HtmlForm addAddressForm = nextPage.getForms().get(0);
-
-		// place data at form
-		HtmlInput vatInput = addAddressForm.getInputByName("vat");
-		vatInput.setValueAttribute("197672337");
-
-		HtmlInput addressInput = addAddressForm.getInputByName("address");
-		addressInput.setValueAttribute("Rua do alex");
-		
-		HtmlInput doorInput = addAddressForm.getInputByName("door");
-		doorInput.setValueAttribute("69");
-		
-		HtmlInput postalInput = addAddressForm.getInputByName("postalCode");
-		postalInput.setValueAttribute("2700-500");
-		
-		HtmlInput localInput = addAddressForm.getInputByName("locality");
-		localInput.setValueAttribute("Cova da Moura");
-		// submit form
-		HtmlInput submit = addAddressForm.getInputByValue("Insert");
-
-		// check if report page includes the proper values
-		HtmlPage reportPage = submit.click();
-
-		HtmlAnchor getCustomerLink = page.getAnchorByHref("GetCustomerPageController?vat=197672337&submit=Get+Customer");
-		HtmlPage nextPage1 = (HtmlPage) getCustomerLink.openLinkInNewWindow();
-		//System.out.println(nextPage1.as);
-		
-//		final HtmlTable table = reportPage.getHtmlElementById("clients");
-//		System.out.println("---------------------------------");
-//		for (final HtmlTableRow row : table.getRows()) {
-//			System.out.println("Found row");
-//			for (final HtmlTableCell cell : row.getCells()) {
-//				System.out.println("   Found cell: " + cell.asText());
-//			}
-//		}
-//		System.out.println("---------------------------------");
-	}
 
 }
 
