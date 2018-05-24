@@ -330,7 +330,13 @@ public class HtmlUnitTests {
 	
 	@Test
 	public void createCustomerAddSaleDeliverSale() throws IOException {
-		addCustomer("144391627", "CustomerTeste", "912345678");
+		
+		//Cria utilizador
+		final String NPC = "144391627";
+		final String DESIGNATION = "CustomerTeste";
+		final String PHONE = "912345678";
+		
+		addCustomer(NPC, DESIGNATION, PHONE);
 	}
 	
 }
