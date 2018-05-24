@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 import org.junit.BeforeClass;
@@ -15,15 +14,12 @@ import com.gargoylesoftware.htmlunit.HttpMethod;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
-import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlTable;
-import com.gargoylesoftware.htmlunit.html.HtmlTableCell;
 import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
-import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLTableRowElement;
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
 
 public class HtmlUnitTests {
@@ -51,9 +47,11 @@ public class HtmlUnitTests {
 			assertEquals(200, page.getWebResponse().getStatusCode()); // OK status
 		}
 	}
-	/*
-	@Test
+	
+	//@Test
 	public void insertNewAddress() throws IOException {
+	
+		final String NPC = "197672337";
 		
 		HtmlPage reportPage;
 		
@@ -63,15 +61,21 @@ public class HtmlUnitTests {
 
 			// Set the request parameters
 			requestSettings.setRequestParameters(new ArrayList<NameValuePair>());
-			requestSettings.getRequestParameters().add(new NameValuePair("vat", "197672337"));
+			requestSettings.getRequestParameters().add(new NameValuePair("vat", NPC));
 			requestSettings.getRequestParameters().add(new NameValuePair("submit", "Get+Customer"));
 
 			reportPage = webClient.getPage(requestSettings);
 			assertEquals(HttpMethod.GET, reportPage.getWebResponse().getWebRequest().getHttpMethod());		
 		}
-		
-		HtmlTable table = (HtmlTable) reportPage.getByXPath("//table[@class='w3-table w3-bordered']").get(0);
 
+		int firstTableCount = 0;
+		if (reportPage.getByXPath("//table[@class='w3-table w3-bordered']").size() == 0) {
+			firstTableCount = 1;
+		}else {
+			HtmlTable table = (HtmlTable) reportPage.getByXPath("//table[@class='w3-table w3-bordered']").get(0);
+			firstTableCount = table.getRowCount();
+		}
+		
 		// get a specific link
 		HtmlAnchor addAddressLink = page.getAnchorByHref("addAddressToCustomer.html");
 		// click on it
@@ -84,7 +88,7 @@ public class HtmlUnitTests {
 
 		// place data at form
 		HtmlInput vatInput = addAddressForm.getInputByName("vat");
-		vatInput.setValueAttribute("197672337");
+		vatInput.setValueAttribute(NPC);
 
 		HtmlInput addressInput = addAddressForm.getInputByName("address");
 		addressInput.setValueAttribute("Rua dos olivais");
@@ -109,7 +113,7 @@ public class HtmlUnitTests {
 
 			// Set the request parameters
 			requestSettings.setRequestParameters(new ArrayList<NameValuePair>());
-			requestSettings.getRequestParameters().add(new NameValuePair("vat", "197672337"));
+			requestSettings.getRequestParameters().add(new NameValuePair("vat", NPC));
 			requestSettings.getRequestParameters().add(new NameValuePair("submit", "Get+Customer"));
 
 			reportPage = webClient.getPage(requestSettings);
@@ -118,13 +122,13 @@ public class HtmlUnitTests {
 		
 		HtmlTable newtable = (HtmlTable) reportPage.getByXPath("//table[@class='w3-table w3-bordered']").get(0);
 		
-		assertTrue(table.getRowCount() + 1 == newtable.getRowCount());
+		assertTrue(firstTableCount + 1 == newtable.getRowCount());
 
 		String[] myRow = {"Rua dos olivais", "10", "2700-500", "Cova da Moura"};
 		
 		boolean match = true;
-		for(int i = 1; i < table.getRowCount(); i++) {	
-			HtmlTableRow row = table.getRow(i);
+		for(int i = 1; i < newtable.getRowCount(); i++) {	
+			HtmlTableRow row = newtable.getRow(i);
 			match = true;
 			for(int j = 0; j < row.getCells().size(); j++) {
 				if (!row.getCell(j).asText().equals(myRow[j]))
@@ -138,7 +142,7 @@ public class HtmlUnitTests {
 	}
 	
 	
-	@Test
+	//@Test
 	public void addNewCostumers() throws IOException {
 		
 		final String NPC1 = "503183504";
@@ -187,7 +191,7 @@ public class HtmlUnitTests {
 		assertTrue(customer1 && customer2 && customer3);
 		
 	}
-	*/
+	
 	private void addCustomer(String npc, String designation, String phone) throws IOException {
 		HtmlAnchor addCustomerLink = page.getAnchorByHref("addCustomer.html");
 		HtmlPage nextPage = (HtmlPage) addCustomerLink.openLinkInNewWindow();
@@ -206,11 +210,12 @@ public class HtmlUnitTests {
 		
 		HtmlInput submit = addCustomerForm.getInputByName("submit");
 		submit.click();
-		
 	}
-	/*
-	@Test
+	
+	//@Test
 	public void newOpenSale() throws IOException {
+	
+		final String NPC = "168027852";
 		
 		HtmlAnchor insertSaleLink = page.getAnchorByHref("addSale.html");
 		HtmlPage nextPage = (HtmlPage) insertSaleLink.openLinkInNewWindow();
@@ -219,7 +224,7 @@ public class HtmlUnitTests {
 		HtmlForm insertSaleFormForm = nextPage.getForms().get(0);
 		
 		HtmlInput vatInput = insertSaleFormForm.getInputByName("customerVat");
-		vatInput.setValueAttribute("197672337");
+		vatInput.setValueAttribute(NPC);
 		
 		HtmlInput submit = insertSaleFormForm.getInputByValue("Add Sale");
 		submit.click();
@@ -232,7 +237,7 @@ public class HtmlUnitTests {
 
 			// Set the request parameters
 			requestSettings.setRequestParameters(new ArrayList<NameValuePair>());
-			requestSettings.getRequestParameters().add(new NameValuePair("customerVat", "197672337"));
+			requestSettings.getRequestParameters().add(new NameValuePair("customerVat", NPC));
 
 			reportPage = webClient.getPage(requestSettings);
 			assertEquals(HttpMethod.GET, reportPage.getWebResponse().getWebRequest().getHttpMethod());		
@@ -243,20 +248,20 @@ public class HtmlUnitTests {
 		boolean match = false;
 		for(int i = 1; i < table.getRowCount(); i++) {	
 			HtmlTableRow row = table.getRow(i);
-			if (row.getLastElementChild().asText().equals("197672337") && row.getCell(3).asText().equals("O"))
+			if (row.getLastElementChild().asText().equals(NPC) && row.getCell(3).asText().equals("O"))
 				match = true;
 		}
 		
 		assertTrue(match);
-	}*/
+	}
 	
-	@Test
+	//@Test
 	public void closeSale() throws IOException {
 		
 		//Cria utilizador
 		final String NPC = "123456789";
 		final String DESIGNATION = "CustomerCloseSale";
-		final String PHONE = "217503001";
+		final String PHONE = "217563001";
 		
 		addCustomer(NPC, DESIGNATION, PHONE);
 		
@@ -293,7 +298,7 @@ public class HtmlUnitTests {
 		idInput.setValueAttribute(id);
 		
 		HtmlInput submitClose = closeSaleFormForm.getInputByValue("Close Sale");
-		HtmlPage report = submitClose.click();
+		submitClose.click();
 		
 		//Verificar venda fechada
 		
@@ -321,6 +326,11 @@ public class HtmlUnitTests {
 		}
 		
 		assertTrue(match);
+	}
+	
+	@Test
+	public void createCustomerAddSaleDeliverSale() throws IOException {
+		addCustomer("144391627", "CustomerTeste", "912345678");
 	}
 	
 }
