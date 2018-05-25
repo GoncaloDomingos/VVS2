@@ -147,4 +147,17 @@ public class SaleDeliveryRowDataGateway {
 		}
 	}
 	
+	private static final String REMOVE_DELIVERY_BY_VAT_SQL = 
+			"delete from saledelivery " +
+					   "where customer_vat = ?";
+	
+	public void removeDelivery() throws PersistenceException {
+		try (PreparedStatement statement = DataSource.INSTANCE.prepare(REMOVE_DELIVERY_BY_VAT_SQL)){
+			statement.setInt(1, customer_vat);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			throw new PersistenceException("Internal error deleting delivery " + customer_vat + ".", e);
+		}
+	}
+	
 }

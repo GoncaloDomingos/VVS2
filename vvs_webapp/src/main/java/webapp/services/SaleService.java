@@ -51,6 +51,19 @@ public enum SaleService {
 		}
 	}
 	
+	public SalesDTO getAllSales(int vat) throws ApplicationException {
+		try {
+			List<SaleRowDataGateway> sales = new SaleRowDataGateway().getAllSales(vat);
+			List<SaleDTO> list = new ArrayList<>();
+			for(SaleRowDataGateway sl : sales) {
+				list.add(new SaleDTO(sl.getId(), sl.getData(),sl.getTotal(), sl.getStatusId(), sl.getCustomerVat()));
+			}
+			SalesDTO s = new SalesDTO(list);
+			return s;
+		} catch (PersistenceException e) {
+				throw new ApplicationException ("Error loading sales.", e);
+		}
+	}
 	
 	public void addSale(int customerVat) throws ApplicationException {
 		try {
@@ -131,5 +144,25 @@ public enum SaleService {
 		if (checkDigitCalc == 10)
 			checkDigitCalc = 0;
 		return checkDigit == checkDigitCalc;
+	}
+	
+	public void removeAllSales(int customerVat) throws ApplicationException {
+		try {
+			List<SaleRowDataGateway> sale = new SaleRowDataGateway().getAllSales(customerVat);
+			for(SaleRowDataGateway saleRow : sale)
+				saleRow.removeSale();
+		} catch (PersistenceException e) {
+				throw new ApplicationException ("Sale with id doesn't exist.", e);
+		}
+	}
+
+	public void removeAllSalesDelivery(int vat) throws ApplicationException {
+		try {
+			List<SaleDeliveryRowDataGateway> salesd = new SaleDeliveryRowDataGateway().getAllSaleDelivery(vat);
+			for(SaleDeliveryRowDataGateway sd : salesd)
+				sd.removeDelivery();
+		} catch (PersistenceException e) {
+			throw new ApplicationException ("Customer with vat number " + vat + " not found.", e);
+		}
 	}
 }
