@@ -8,4 +8,5 @@ public final List<AddressDTO> addrs;
 	public AddressesDTO(List<AddressDTO> addrs) {
 		this.addrs = addrs;
 	}
+
 }

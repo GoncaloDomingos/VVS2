@@ -115,6 +115,9 @@ public enum CustomerService {
 		}
 	}
 
+	public boolean validateAddress(int vat, int addressId) throws ApplicationException {
+		return (addressId > 0 && getAllAddresses(vat).addrs.size() >= addressId);
+	}
 	 
 	/**
 	 * Checks if a VAT number is valid.
@@ -149,6 +152,6 @@ public enum CustomerService {
 			checkDigitCalc = 0;
 		return checkDigit == checkDigitCalc;
 	}
-
+	
 
 }

@@ -3,7 +3,6 @@ package vvs_dbsetup;
 import java.sql.SQLException;
 
 import static org.junit.Assert.*;
-import static org.junit.Assume.*;
 import org.junit.*;
 
 import com.ninja_squad.dbsetup.DbSetup;
@@ -85,7 +84,7 @@ public class CustomersDBTest {
 	}
 	
 	@Test
-	public void increaseSales() throws ApplicationException {
+	public void addSale() throws ApplicationException {
 		SaleService.INSTANCE.addSale(197672337);
 		assertEquals(NUM_INIT_SALES + 1, SaleService.INSTANCE.getAllSales().sales.size());
 	}
@@ -99,6 +98,25 @@ public class CustomersDBTest {
 			else
 				assertEquals(s.statusId, "O");
 		}
+	}
+	
+	@Test(expected=ApplicationException.class)
+	public void closeUnexistentSale() throws ApplicationException {
+		SaleService.INSTANCE.updateSale(5);
+	}
+	
+	@Test
+	public void addSaleDelivery() throws ApplicationException {
+		int before = SaleService.INSTANCE.getSalesDeliveryByVat(197672337).sales_delivery.size();
+		SaleService.INSTANCE.addSaleDelivery(1, 1);
+		int after = SaleService.INSTANCE.getSalesDeliveryByVat(197672337).sales_delivery.size();
+		assertEquals(before + 1, after);
+	}
+	
+	@Test(expected=ApplicationException.class)
+	public void addDeliveryToUnexistentAddress() throws ApplicationException {
+		SaleService.INSTANCE.addSaleDelivery(1, 5);
+		
 	}
 	
 }

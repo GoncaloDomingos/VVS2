@@ -103,7 +103,7 @@ public class SaleDeliveryRowDataGateway {
 			statement.setInt(3, addr_id);
 			// executes SQL
 			statement.executeUpdate();
-			
+			System.out.println("HEY -> " + addr_id);
 			
 		}  catch (SQLException e){
 			throw new PersistenceException("Internal error!", e);

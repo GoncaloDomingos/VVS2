@@ -104,9 +104,11 @@ public enum SaleService {
 		try {
 			SaleRowDataGateway s = new SaleRowDataGateway().getSaleById(sale_id);
 			SaleDeliveryRowDataGateway sale = new SaleDeliveryRowDataGateway(sale_id, s.getCustomerVat() ,addr_id);
+			int costumer_vat = s.getCustomerVat();
+			if (!CustomerService.INSTANCE.validateAddress(costumer_vat, addr_id))
+				throw new ApplicationException("Adddress does not exist.");
 			sale.insert();
 			return sale.getCustomerVat();
-			
 		} catch (PersistenceException e) {
 				throw new ApplicationException ("Can't add address to cutomer.", e);
 		}
